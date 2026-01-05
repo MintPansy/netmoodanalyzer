@@ -1,0 +1,40 @@
+[build]
+  publish = "."
+  command = ""
+
+# Function settings
+[functions]
+  directory = "netlify/functions"
+
+# Redirects for API routes
+[[redirects]]
+  from = "/api/realtime-data"
+  to = "/.netlify/functions/realtime-data"
+  status = 200
+
+[[redirects]]
+  from = "/api/streaming-data" 
+  to = "/.netlify/functions/streaming-data"
+  status = 200
+
+[[redirects]]
+  from = "/api/system-status"
+  to = "/.netlify/functions/system-status"
+  status = 200
+
+# Legacy API redirects (fallback)
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/realtime-data"
+  status = 200
+  force = false
+
+# Headers for CORS
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Headers = "Content-Type"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+
+

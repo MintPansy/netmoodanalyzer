@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NetMood Analyzer - 메인</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #EAFBF6 0%, #D6FFF4 100%);
+      min-height: 100vh;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .main-container {
+      text-align: center;
+      max-width: 800px;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .logo {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #2E7D32, #4CAF50);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1.2em;
+      color: #666;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    .dashboard-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .dashboard-card {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      border-color: #4CAF50;
+    }
+
+    .dashboard-card h3 {
+      font-size: 1.3em;
+      margin-bottom: 15px;
+      color: #2E7D32;
+    }
+
+    .dashboard-card p {
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .dashboard-card .icon {
+      font-size: 2em;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .integrated { background: linear-gradient(135deg, #E8F5E8, #F1F8E9); }
+    .realtime { background: linear-gradient(135deg, #E3F2FD, #F3E5F5); }
+    .netmood { background: linear-gradient(135deg, #FFF3E0, #FCE4EC); }
+
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+      color: #888;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="main-container">
+    <div class="logo">
+      <img src="netmood-logo.webp" alt="NetMood Analyzer Logo">
+    </div>
+    <h1>NetMood Analyzer</h1>
+    <p class="subtitle">
+      네트워크 트래픽을 감정으로 분석하는 AI 대시보드<br>
+      네트워크 데이터를 업로드하여 실시간 감정 분석 결과를 확인하세요
+    </p>
+
+    <div class="dashboard-links">
+      <a href="/integrated-dashboard.html" class="dashboard-card integrated">
+        <span class="icon">📊</span>
+        <h3>통합 대시보드</h3>
+        <p>모든 감정 분석 결과를 한눈에 확인할 수 있는 메인 대시보드입니다.</p>
+      </a>
+
+      <a href="/realtime-dashboard.html" class="dashboard-card realtime">
+        <span class="icon">⚡</span>
+        <h3>실시간 대시보드</h3>
+        <p>실시간으로 네트워크 감정 상태 변화를 모니터링하는 대시보드입니다.</p>
+      </a>
+
+      <a href="/netmood-dashboard.html" class="dashboard-card netmood">
+        <span class="icon">🎯</span>
+        <h3>NetMood 대시보드</h3>
+        <p>상세한 감정 분석과 고급 시각화를 제공하는 전문 대시보드입니다.</p>
+      </a>
+    </div>
+
+    <div class="footer">
+      <p>NetMood Analyzer - AI 기반 네트워크 감정 분석 도구</p>
+    </div>
+  </div>
+</body>
+
+</html>

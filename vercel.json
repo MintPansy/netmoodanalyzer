@@ -1,0 +1,34 @@
+{
+  "version": 2,
+  "public": true,
+  "builds": [
+    {
+      "src": "integrated-dashboard.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "realtime-dashboard.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "netmood-dashboard.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.{js,csv,md,py,webp}",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/integrated-dashboard.html"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/integrated-dashboard.html"
+    }
+  ]
+}

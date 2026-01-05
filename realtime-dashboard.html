@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NetMood Analyzer - 실시간 모니터링</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .dashboard {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 25px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      font-size: 1rem;
+      color: #666;
+    }
+
+    /* 실시간 상태 표시 */
+    .realtime-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .connection-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .status-indicator.connected {
+      background: #28a745;
+    }
+
+    .status-indicator.disconnected {
+      background: #dc3545;
+    }
+
+    .status-indicator.connecting {
+      background: #ffc107;
+    }
+
+    .control-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .control-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .control-btn.primary {
+      background: linear-gradient(45deg, #28a745, #20c997);
+      color: white;
+    }
+
+    .control-btn.secondary {
+      background: rgba(255, 255, 255, 0.8);
+      color: #333;
+      border: 1px solid #ddd;
+    }
+
+    .control-btn.danger {
+      background: linear-gradient(45deg, #dc3545, #e83e8c);
+      color: white;
+    }
+
+    .control-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* 메인 대시보드 그리드 */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .dashboard-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 25px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* 실시간 감정 표시 */
+    .current-emotion {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .emotion-display {
+      font-size: 6rem;
+      margin-bottom: 15px;
+      animation: emotionPulse 3s infinite;
+    }
+
+    .emotion-text {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .emotion-confidence {
+      font-size: 1rem;
+      color: #666;
+      background: rgba(102, 126, 234, 0.1);
+      padding: 8px 16px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    /* 실시간 통계 */
+    .realtime-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 10px;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 5px;
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .stat-unit {
+      font-size: 0.8rem;
+      color: #999;
+      margin-left: 4px;
+    }
+
+    /* 실시간 차트 */
+    .realtime-chart-container {
+      position: relative;
+      height: 300px;
+    }
+
+    .realtime-chart-container canvas {
+      height: 100% !important;
+    }
+
+    /* 패킷 스트림 */
+    .packet-stream {
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 10px;
+      background: rgba(248, 249, 250, 0.8);
+    }
+
+    .packet-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      margin-bottom: 5px;
+      background: white;
+      border-radius: 8px;
+      border-left: 4px solid;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    .packet-item.calm { border-left-color: #28a745; }
+    .packet-item.happy { border-left-color: #17a2b8; }
+    .packet-item.anxious { border-left-color: #ffc107; }
+    .packet-item.angry { border-left-color: #dc3545; }
+    .packet-item.sad { border-left-color: #6f42c1; }
+
+    .packet-info {
+      flex: 1;
+    }
+
+    .packet-emotion {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .packet-details {
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    .packet-time {
+      font-size: 0.8rem;
+      color: #999;
+    }
+
+    /* 감정 분포 */
+    .emotion-distribution {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .emotion-bar {
+      text-align: center;
+    }
+
+    .emotion-bar-item {
+      height: 100px;
+      background: linear-gradient(to top, #f8f9fa, #e9ecef);
+      border-radius: 8px 8px 0 0;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .emotion-bar-fill {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-radius: 8px 8px 0 0;
+      transition: height 0.5s ease;
+    }
+
+    .emotion-bar.calm .emotion-bar-fill { background: linear-gradient(to top, #28a745, #20c997); }
+    .emotion-bar.happy .emotion-bar-fill { background: linear-gradient(to top, #17a2b8, #20c997); }
+    .emotion-bar.anxious .emotion-bar-fill { background: linear-gradient(to top, #ffc107, #fd7e14); }
+    .emotion-bar.angry .emotion-bar-fill { background: linear-gradient(to top, #dc3545, #e83e8c); }
+    .emotion-bar.sad .emotion-bar-fill { background: linear-gradient(to top, #6f42c1, #e83e8c); }
+
+    .emotion-bar-label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .emotion-bar-value {
+      font-size: 0.7rem;
+      color: #666;
+      margin-top: 2px;
+    }
+
+    /* 개인정보 보호 설정 */
+    .privacy-panel {
+      grid-column: 1 / -1;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .privacy-settings {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+    }
+
+    .privacy-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 8px;
+    }
+
+    .privacy-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+    }
+
+    .privacy-item label {
+      font-size: 0.9rem;
+      color: #333;
+      cursor: pointer;
+    }
+
+    /* 애니메이션 */
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes emotionPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* 반응형 디자인 */
+    @media (max-width: 1200px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard {
+        padding: 10px;
+      }
+
+      .realtime-status {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+
+      .control-buttons {
+        justify-content: center;
+      }
+
+      .emotion-display {
+        font-size: 4rem;
+      }
+
+      .emotion-text {
+        font-size: 1.2rem;
+      }
+
+      .realtime-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .emotion-distribution {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .packet-stream {
+        max-height: 300px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .emotion-distribution {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .control-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <!-- 헤더 -->
+    <header class="header">
+      <h1>🔴 NetMood 실시간 모니터링</h1>
+      <p>네트워크 트래픽을 실시간으로 캡처하고 감정을 분석합니다</p>
+    </header>
+
+    <!-- 실시간 상태 표시 -->
+    <div class="realtime-status">
+      <div class="connection-status">
+        <div class="status-indicator disconnected" id="connectionStatus"></div>
+        <span id="connectionText">연결 끊김</span>
+        <span id="packetCount">패킷: 0개</span>
+      </div>
+      <div class="control-buttons">
+        <button class="control-btn primary" onclick="startMonitoring()">▶️ 모니터링 시작</button>
+        <button class="control-btn secondary" onclick="pauseMonitoring()">⏸️ 일시정지</button>
+        <button class="control-btn danger" onclick="stopMonitoring()">⏹️ 중지</button>
+        <button class="control-btn secondary" onclick="exportData()">💾 데이터 내보내기</button>
+      </div>
+    </div>
+
+    <!-- 메인 대시보드 그리드 -->
+    <div class="dashboard-grid">
+      <!-- 현재 감정 상태 -->
+      <div class="dashboard-card">
+        <h2 class="card-title">
+          🎭 현재 네트워크 감정
+        </h2>
+        <div class="current-emotion">
+          <div class="emotion-display" id="currentEmotion">😌</div>
+          <div class="emotion-text" id="emotionText">평온한 상태</div>
+          <div class="emotion-confidence" id="emotionConfidence">신뢰도: 0%</div>
+        </div>
+        
+        <div class="realtime-stats">
+          <div class="stat-item">
+            <div class="stat-label">총 패킷</div>
+            <div class="stat-value" id="totalPackets">0</div>
+            <div class="stat-unit">개</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">패킷/초</div>
+            <div class="stat-value" id="packetsPerSecond">0</div>
+            <div class="stat-unit">pps</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">모니터링 시간</div>
+            <div class="stat-value" id="monitoringTime">00:00</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">마지막 업데이트</div>
+            <div class="stat-value" id="lastUpdate">--:--</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 실시간 차트 -->
+      <div class="dashboard-card">
+        <h2 class="card-title">
+          📈 실시간 감정 추이
+        </h2>
+        <div class="realtime-chart-container">
+          <canvas id="realtimeChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 패킷 스트림 -->
+      <div class="dashboard-card">
+        <h2 class="card-title">
+          📦 실시간 패킷 스트림
+        </h2>
+        <div class="packet-stream" id="packetStream">
+          <div style="text-align: center; color: #999; padding: 20px;">
+            패킷 캡처를 시작하면 여기에 실시간 패킷 정보가 표시됩니다
+          </div>
+        </div>
+      </div>
+
+      <!-- 감정 분포 -->
+      <div class="dashboard-card">
+        <h2 class="card-title">
+          📊 감정 분포
+        </h2>
+        <div class="emotion-distribution">
+          <div class="emotion-bar calm">
+            <div class="emotion-bar-item">
+              <div class="emotion-bar-fill" style="height: 0%"></div>
+            </div>
+            <div class="emotion-bar-label">평온</div>
+            <div class="emotion-bar-value" id="calmCount">0</div>
+          </div>
+          <div class="emotion-bar happy">
+            <div class="emotion-bar-item">
+              <div class="emotion-bar-fill" style="height: 0%"></div>
+            </div>
+            <div class="emotion-bar-label">기쁨</div>
+            <div class="emotion-bar-value" id="happyCount">0</div>
+          </div>
+          <div class="emotion-bar anxious">
+            <div class="emotion-bar-item">
+              <div class="emotion-bar-fill" style="height: 0%"></div>
+            </div>
+            <div class="emotion-bar-label">불안</div>
+            <div class="emotion-bar-value" id="anxiousCount">0</div>
+          </div>
+          <div class="emotion-bar angry">
+            <div class="emotion-bar-item">
+              <div class="emotion-bar-fill" style="height: 0%"></div>
+            </div>
+            <div class="emotion-bar-label">화남</div>
+            <div class="emotion-bar-value" id="angryCount">0</div>
+          </div>
+          <div class="emotion-bar sad">
+            <div class="emotion-bar-item">
+              <div class="emotion-bar-fill" style="height: 0%"></div>
+            </div>
+            <div class="emotion-bar-label">슬픔</div>
+            <div class="emotion-bar-value" id="sadCount">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 개인정보 보호 설정 -->
+    <div class="privacy-panel">
+      <h2 class="card-title">
+        🔒 개인정보 보호 설정
+      </h2>
+      <div class="privacy-settings">
+        <div class="privacy-item">
+          <input type="checkbox" id="anonymizeIPs" checked>
+          <label for="anonymizeIPs">IP 주소 익명화</label>
+        </div>
+        <div class="privacy-item">
+          <input type="checkbox" id="filterSensitive" checked>
+          <label for="filterSensitive">민감한 데이터 필터링</label>
+        </div>
+        <div class="privacy-item">
+          <input type="checkbox" id="localOnly" checked>
+          <label for="localOnly">로컬 처리만 허용</label>
+        </div>
+        <div class="privacy-item">
+          <input type="checkbox" id="autoCleanup">
+          <label for="autoCleanup">자동 데이터 정리 (24시간)</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 전역 변수
+    let websocket = null;
+    let realtimeChart = null;
+    let isMonitoring = false;
+    let monitoringStartTime = null;
+    let packetStream = [];
+    let maxPacketsInStream = 50;
+    let chartData = {
+      labels: [],
+      datasets: [
+        {
+          label: '평온',
+          data: [],
+          borderColor: '#28a745',
+          backgroundColor: 'rgba(40, 167, 69, 0.1)',
+          tension: 0.4
+        },
+        {
+          label: '기쁨',
+          data: [],
+          borderColor: '#17a2b8',
+          backgroundColor: 'rgba(23, 162, 184, 0.1)',
+          tension: 0.4
+        },
+        {
+          label: '불안',
+          data: [],
+          borderColor: '#ffc107',
+          backgroundColor: 'rgba(255, 193, 7, 0.1)',
+          tension: 0.4
+        },
+        {
+          label: '화남',
+          data: [],
+          borderColor: '#dc3545',
+          backgroundColor: 'rgba(220, 53, 69, 0.1)',
+          tension: 0.4
+        },
+        {
+          label: '슬픔',
+          data: [],
+          borderColor: '#6f42c1',
+          backgroundColor: 'rgba(111, 66, 193, 0.1)',
+          tension: 0.4
+        }
+      ]
+    };
+
+    // 감정별 이모지와 색상 매핑
+    const emotionConfig = {
+      '평온': { emoji: '😌', color: '#28a745' },
+      '기쁨': { emoji: '😊', color: '#17a2b8' },
+      '불안': { emoji: '😰', color: '#ffc107' },
+      '화남': { emoji: '😡', color: '#dc3545' },
+      '슬픔': { emoji: '😢', color: '#6f42c1' }
+    };
+
+    // 초기화
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeChart();
+      updatePrivacySettings();
+      startTimeUpdate();
+    });
+
+    // 차트 초기화
+    function initializeChart() {
+      const ctx = document.getElementById('realtimeChart').getContext('2d');
+      realtimeChart = new Chart(ctx, {
+        type: 'line',
+        data: chartData,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              display: true,
+              title: {
+                display: true,
+                text: '시간'
+              }
+            },
+            y: {
+              display: true,
+              title: {
+                display: true,
+                text: '감정 빈도'
+              },
+              beginAtZero: true
+            }
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top'
+            }
+          },
+          animation: {
+            duration: 750,
+            easing: 'easeInOutQuart'
+          }
+        }
+      });
+    }
+
+    // Netlify Functions 연결
+    function connectToNetlifyFunctions() {
+      updateConnectionStatus('connecting', '연결 중...');
+      
+      try {
+        // Test connection with heartbeat
+        fetch('/.netlify/functions/streaming-data', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            action: 'heartbeat'
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            updateConnectionStatus('connected', '연결됨 (Netlify)');
+            console.log('Netlify Functions 연결됨');
+            startDataStreaming();
+          } else {
+            throw new Error('Connection failed');
+          }
+        })
+        .catch(error => {
+          console.error('Netlify Functions 연결 실패:', error);
+          updateConnectionStatus('disconnected', '연결 실패');
+          
+          // 자동 재연결 시도
+          if (isMonitoring) {
+            setTimeout(connectToNetlifyFunctions, 5000);
+          }
+        });
+        
+      } catch (error) {
+        console.error('연결 초기화 실패:', error);
+        updateConnectionStatus('disconnected', '연결 실패');
+      }
+    }
+
+    // 실시간 데이터 스트리밍 시작
+    function startDataStreaming() {
+      if (!isMonitoring) return;
+      
+      // Server-Sent Events를 시뮬레이션하기 위해 주기적으로 데이터 요청
+      const streamData = () => {
+        if (!isMonitoring) return;
+        
+        fetch('/.netlify/functions/realtime-data?count=5')
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              handleRealtimeData(data.data);
+            }
+          })
+          .catch(error => {
+            console.error('데이터 스트림 오류:', error);
+            updateConnectionStatus('disconnected', '데이터 오류');
+          });
+        
+        // 2초마다 새 데이터 요청
+        setTimeout(streamData, 2000);
+      };
+      
+      streamData();
+    }
+
+    // 실시간 데이터 처리
+    function handleRealtimeData(data) {
+      const { packets, stats } = data;
+      
+      // 패킷 데이터 처리
+      if (packets && packets.length > 0) {
+        packets.forEach(packet => {
+          addPacketToStream(packet);
+        });
+        
+        // 패킷 수 업데이트
+        updatePacketCount(stats.totalPackets || packets.length);
+      }
+      
+      // 통계 데이터 처리
+      if (stats) {
+        updateEmotionDisplay(stats.emotionPercentages);
+        updateEmotionDistribution(stats.emotionCounts);
+        updateChart(stats.emotionPercentages);
+        updatePacketsPerSecond(stats.avgPacketRate || 0);
+      }
+      
+      updateLastUpdateTime();
+    }
+
+    // 패킷/초 업데이트
+    function updatePacketsPerSecond(pps) {
+      document.getElementById('packetsPerSecond').textContent = Math.floor(pps);
+    }
+
+    // 감정 표시 업데이트
+    function updateEmotionDisplay(emotionPercentages) {
+      if (!emotionPercentages) return;
+
+      // 주요 감정 찾기
+      const dominantEmotion = Object.keys(emotionPercentages).reduce((a, b) => 
+        emotionPercentages[a] > emotionPercentages[b] ? a : b
+      );
+
+      const config = emotionConfig[dominantEmotion];
+      if (config) {
+        document.getElementById('currentEmotion').textContent = config.emoji;
+        document.getElementById('currentEmotion').style.color = config.color;
+        document.getElementById('emotionText').textContent = `${dominantEmotion}한 상태`;
+        document.getElementById('emotionConfidence').textContent = `신뢰도: ${emotionPercentages[dominantEmotion]}%`;
+      }
+    }
+
+    // 감정 분포 업데이트
+    function updateEmotionDistribution(emotionCounts) {
+      if (!emotionCounts) return;
+
+      const totalCount = Object.values(emotionCounts).reduce((sum, count) => sum + count, 0);
+      const maxCount = Math.max(...Object.values(emotionCounts));
+      
+      const emotionMap = {
+        '평온': 'calm',
+        '기쁨': 'happy', 
+        '불안': 'anxious',
+        '화남': 'angry',
+        '슬픔': 'sad'
+      };
+      
+      Object.keys(emotionMap).forEach(emotion => {
+        const count = emotionCounts[emotion] || 0;
+        const percentage = maxCount > 0 ? (count / maxCount) * 100 : 0;
+        const className = emotionMap[emotion];
+        
+        const barElement = document.querySelector(`.emotion-bar.${className} .emotion-bar-fill`);
+        const valueElement = document.getElementById(`${className}Count`);
+        
+        if (barElement && valueElement) {
+          barElement.style.height = `${percentage}%`;
+          valueElement.textContent = count;
+        }
+      });
+    }
+
+    // 차트 업데이트
+    function updateChart(emotionPercentages) {
+      if (!emotionPercentages || !realtimeChart) return;
+
+      const now = new Date();
+      const timeLabel = now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      
+      // 새로운 데이터 포인트 추가
+      chartData.labels.push(timeLabel);
+      chartData.datasets[0].data.push(emotionPercentages['평온'] || 0);
+      chartData.datasets[1].data.push(emotionPercentages['기쁨'] || 0);
+      chartData.datasets[2].data.push(emotionPercentages['불안'] || 0);
+      chartData.datasets[3].data.push(emotionPercentages['화남'] || 0);
+      chartData.datasets[4].data.push(emotionPercentages['슬픔'] || 0);
+
+      // 최대 20개 데이터 포인트 유지
+      if (chartData.labels.length > 20) {
+        chartData.labels.shift();
+        chartData.datasets.forEach(dataset => dataset.data.shift());
+      }
+
+      realtimeChart.update('none');
+    }
+
+    // 패킷 스트림 업데이트
+    function addPacketToStream(packet) {
+      const emotionClassMap = {
+        '평온': 'calm',
+        '기쁨': 'happy',
+        '불안': 'anxious', 
+        '화남': 'angry',
+        '슬픔': 'sad'
+      };
+      
+      const packetElement = document.createElement('div');
+      const emotionClass = emotionClassMap[packet.emotion] || 'calm';
+      packetElement.className = `packet-item ${emotionClass}`;
+      
+      packetElement.innerHTML = `
+        <div class="packet-info">
+          <div class="packet-emotion">${packet.emotion} ${packet.protocol}</div>
+          <div class="packet-details">${packet.sourceIP} → ${packet.destinationIP} (${packet.bytes} bytes)</div>
+        </div>
+        <div class="packet-time">${new Date(packet.timestamp).toLocaleTimeString('ko-KR')}</div>
+      `;
+
+      const streamContainer = document.getElementById('packetStream');
+      
+      // 첫 번째 메시지 제거
+      if (streamContainer.children.length === 1 && streamContainer.children[0].style.textAlign === 'center') {
+        streamContainer.innerHTML = '';
+      }
+
+      streamContainer.insertBefore(packetElement, streamContainer.firstChild);
+
+      // 최대 개수 초과 시 오래된 것 제거
+      while (streamContainer.children.length > maxPacketsInStream) {
+        streamContainer.removeChild(streamContainer.lastChild);
+      }
+    }
+
+    // 연결 상태 업데이트
+    function updateConnectionStatus(status, text) {
+      const statusElement = document.getElementById('connectionStatus');
+      const textElement = document.getElementById('connectionText');
+      
+      statusElement.className = `status-indicator ${status}`;
+      textElement.textContent = text;
+    }
+
+    // 패킷 수 업데이트
+    function updatePacketCount(count) {
+      document.getElementById('packetCount').textContent = `패킷: ${count}개`;
+      document.getElementById('totalPackets').textContent = count;
+    }
+
+    // 마지막 업데이트 시간
+    function updateLastUpdateTime() {
+      const now = new Date();
+      document.getElementById('lastUpdate').textContent = now.toLocaleTimeString('ko-KR');
+    }
+
+    // 모니터링 시간 업데이트
+    function startTimeUpdate() {
+      setInterval(() => {
+        if (monitoringStartTime) {
+          const elapsed = Math.floor((Date.now() - monitoringStartTime) / 1000);
+          const minutes = Math.floor(elapsed / 60);
+          const seconds = elapsed % 60;
+          document.getElementById('monitoringTime').textContent = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+      }, 1000);
+    }
+
+    // 개인정보 보호 설정 업데이트
+    function updatePrivacySettings() {
+      const settings = {
+        anonymize_ips: document.getElementById('anonymizeIPs').checked,
+        filter_sensitive_data: document.getElementById('filterSensitive').checked,
+        local_processing_only: document.getElementById('localOnly').checked,
+        auto_cleanup: document.getElementById('autoCleanup').checked
+      };
+
+      if (websocket && websocket.readyState === WebSocket.OPEN) {
+        websocket.send(JSON.stringify({
+          type: 'privacy_settings',
+          settings: settings
+        }));
+      }
+    }
+
+    // 모니터링 시작
+    function startMonitoring() {
+      if (isMonitoring) return;
+      
+      isMonitoring = true;
+      monitoringStartTime = Date.now();
+      
+      // Netlify Functions 연결
+      connectToNetlifyFunctions();
+      
+      console.log('실시간 모니터링 시작 (Netlify Functions)');
+    }
+
+    // 모니터링 일시정지
+    function pauseMonitoring() {
+      if (!isMonitoring) return;
+      
+      // 현재 연결 상태만 업데이트
+      updateConnectionStatus('connecting', '일시정지됨');
+      
+      console.log('모니터링 일시정지');
+    }
+
+    // 모니터링 중지
+    function stopMonitoring() {
+      isMonitoring = false;
+      monitoringStartTime = null;
+      
+      updateConnectionStatus('disconnected', '연결 끊김');
+      console.log('모니터링 중지');
+    }
+
+    // 데이터 내보내기
+    function exportData() {
+      fetch('/.netlify/functions/realtime-data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          action: 'status'
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // 데이터를 JSON 파일로 다운로드
+          const dataStr = JSON.stringify(data, null, 2);
+          const dataBlob = new Blob([dataStr], {type: 'application/json'});
+          
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(dataBlob);
+          link.download = `netmood-data-${new Date().toISOString().split('T')[0]}.json`;
+          link.click();
+          
+          console.log('데이터 내보내기 완료');
+        }
+      })
+      .catch(error => {
+        console.error('데이터 내보내기 오류:', error);
+      });
+    }
+
+    // 개인정보 보호 설정 변경 이벤트
+    document.getElementById('anonymizeIPs').addEventListener('change', updatePrivacySettings);
+    document.getElementById('filterSensitive').addEventListener('change', updatePrivacySettings);
+    document.getElementById('localOnly').addEventListener('change', updatePrivacySettings);
+    document.getElementById('autoCleanup').addEventListener('change', updatePrivacySettings);
+  </script>
+</body>
+</html>
