@@ -16,7 +16,18 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: true
-  }
+    sourcemap: true,
+    // Netlify 배포를 위한 설정
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+          'chart-vendor': ['chart.js', 'react-chartjs-2'],
+        },
+      },
+    },
+  },
+  // public 폴더의 파일을 dist로 복사
+  publicDir: 'public',
 })
 

@@ -1,0 +1,6 @@
+# NetMood Analyzer - SPA 라우팅을 위한 리다이렉트 규칙
+# 이 파일은 dist 폴더에 복사되어야 합니다.
+
+# 모든 경로를 index.html로 리다이렉트 (SPA 라우팅)
+/*    /index.html   200
+

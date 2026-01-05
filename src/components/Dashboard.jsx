@@ -29,28 +29,17 @@ export default function Dashboard() {
       case 'overview':
         return (
           <>
-            {/* 상단 건강도 바 */}
+            {/* 1열: 상단 건강도 바 */}
             <HealthBar />
 
-            {/* 메인 콘텐츠 영역 */}
-            <div className="dashboard-content">
-              {/* 좌측: 메트릭 패널 */}
-              <div className="dashboard-metrics">
-                <MetricsPanel />
-              </div>
-
-              {/* 우측: 감정 배지 */}
-              <div className="dashboard-badges">
-                <EmotionBadges />
-              </div>
+            {/* 2열: 5개 감정 배지 (가로 배치) */}
+            <div className="dashboard-badges-full">
+              <EmotionBadges />
             </div>
 
-            {/* 하단 영역 */}
-            <div className="dashboard-bottom">
-              {/* 하단 좌측: Settings */}
-              <div className="dashboard-settings">
-                <SettingsPanel />
-              </div>
+            {/* 3열: 4개 메트릭 패널 (2x2 그리드) */}
+            <div className="dashboard-metrics-full">
+              <MetricsPanel />
             </div>
           </>
         );
@@ -89,6 +78,9 @@ export default function Dashboard() {
   return (
     <div className="dashboard">
       <header className="dashboard-header">
+        <div className="dashboard-logo">
+          <img src="/netmood-logo.webp" alt="NetMood Analyzer Logo" />
+        </div>
         <h1>NetMood Analyzer</h1>
         <p className="dashboard-subtitle">네트워크 상태를 5가지 감정으로 시각화</p>
       </header>

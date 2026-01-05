@@ -1,6 +1,11 @@
 [build]
-  publish = "."
-  command = ""
+  # React + Vite 빌드 설정
+  command = "npm run build"
+  publish = "dist"
+  
+  # Node.js 버전 설정
+  [build.environment]
+    NODE_VERSION = "18"
 
 # Function settings
 [functions]
@@ -28,6 +33,12 @@
   to = "/.netlify/functions/realtime-data"
   status = 200
   force = false
+
+# SPA 라우팅을 위한 리다이렉트 (모든 경로를 index.html로)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
 # Headers for CORS
 [[headers]]

@@ -15,6 +15,21 @@
   padding: 20px 0;
 }
 
+.dashboard-logo {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dashboard-logo img {
+  max-width: 120px;
+  max-height: 120px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
 .dashboard-header h1 {
   font-size: 32px;
   font-weight: 700;
@@ -70,7 +85,16 @@
 
 .dashboard-chart-full {
   width: 100%;
-  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.dashboard-badges-full {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.dashboard-metrics-full {
+  width: 100%;
 }
 
 .dashboard-placeholder {

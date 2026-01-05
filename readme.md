@@ -1,13 +1,15 @@
 # 🌐 NetMood Analyzer
 
-네트워크 트래픽을 AI로 분석해 **감정(기쁨, 스트레스)**으로 시각화하는 웹 대시보드
+네트워크 트래픽을 AI로 분석해 **5가지 감정(😊기쁨, 😰스트레스, 😠화남, 😌평온, 😟불안)**으로 시각화하는 웹 대시보드
 
 ## ✨ 주요 기능
 
 - 📊 **실시간 네트워크 모니터링**: 5초마다 네트워크 상태 자동 측정
-- 😊 **감정 기반 시각화**: 복잡한 네트워크 데이터를 기쁨/스트레스 점수로 직관화
+- 😊 **5가지 감정 시각화**: 복잡한 네트워크 데이터를 감정 점수로 직관화
 - 📈 **인터랙티브 차트**: Chart.js 기반 실시간 라인 차트
+- ⚠️ **자동 진단 시스템**: 네트워크 문제 자동 감지 및 권장사항 제공
 - 💾 **로컬 데이터 저장**: localStorage 기반 데이터 보관
+- 📤 **데이터 내보내기**: CSV/JSON 형식으로 데이터 다운로드
 - 📱 **반응형 디자인**: 모바일, 태블릿, 데스크톱 지원
 
 ## 🚀 시작하기
@@ -46,63 +48,72 @@ netmood-analyzer/
 ├── src/
 │   ├── components/          # React 컴포넌트
 │   │   ├── Dashboard.jsx   # 메인 대시보드
-│   │   ├── HealthBar.jsx   # 상단 건강도 바
-│   │   ├── Chart.jsx       # 차트 컴포넌트
-│   │   └── MetricsPanel.jsx # 메트릭 패널
+│   │   ├── HealthBar.jsx    # 상단 건강도 바
+│   │   ├── EmotionChart.jsx # 5가지 감정 차트
+│   │   ├── EmotionBadges.jsx # 감정 배지
+│   │   ├── MetricsPanel.jsx # 메트릭 패널
+│   │   ├── DiagnosticPanel.jsx # 진단 패널
+│   │   └── ...
 │   ├── context/            # Context API
-│   │   └── NetworkContext.jsx
 │   ├── hooks/              # Custom Hooks
-│   │   └── useNetworkMetrics.js
 │   ├── utils/              # 유틸리티 함수
-│   │   ├── constants.js
-│   │   ├── networkCalculator.js
-│   │   └── storageManager.js
-│   ├── types/              # TypeScript 타입
-│   │   └── index.ts
-│   ├── App.jsx             # 최상위 컴포넌트
-│   ├── main.jsx            # 진입점
-│   └── index.css           # 글로벌 스타일
+│   └── types/              # TypeScript 타입
 ├── public/                 # 정적 자산
+├── dist/                   # 빌드 출력 (배포용)
 ├── package.json
 ├── vite.config.js
-└── tsconfig.json
+└── netlify.toml           # Netlify 배포 설정
 ```
+
+## 🚢 배포
+
+### Netlify 배포 (권장)
+
+#### 방법 1: GitHub 연동
+1. GitHub 레포지토리에 푸시
+2. Netlify에서 레포지토리 연결
+3. 빌드 설정:
+   - Build command: `npm run build`
+   - Publish directory: `dist`
+4. 자동 배포 완료!
+
+#### 방법 2: Netlify CLI
+```bash
+npm install -g netlify-cli
+netlify login
+npm run build
+netlify deploy --prod
+```
+
+자세한 배포 가이드는 [DEPLOYMENT.md](./DEPLOYMENT.md)를 참고하세요.
 
 ## 🎨 디자인 시스템
 
-### 색상 팔레트
-
-- **기쁨**: `#4CAF50` (초록색)
-- **스트레스**: `#F44336` (빨간색)
-- **배경**: `#f0f8f0` (연한 초록)
-- **카드**: `#ffffff` (흰색)
-
-### 컴포넌트 스타일
-
-- 카드: `border-radius: 12px`, `padding: 16px`
-- 버튼: `border-radius: 8px`
-- 그림자: `0 2px 8px rgba(0, 0, 0, 0.08)`
+### 5가지 감정 색상
+- 😊 기쁨: `#4CAF50` (초록색)
+- 😰 스트레스: `#FF6B6B` (빨간색)
+- 😠 화남: `#F44336` (진빨간색)
+- 😌 평온: `#2196F3` (파란색)
+- 😟 불안: `#FFC107` (노란색)
 
 ## 📊 데이터 구조
 
 ### NetworkMetrics
-
 ```typescript
 interface NetworkMetrics {
-  timestamp: number;           // 밀리초 단위
-  latency: number | null;      // 지연시간 (ms)
-  downloadSpeed: number | null; // 다운로드 속도 (Mbps)
-  packetLoss: number;          // 패킷 손실율 (%)
-  happiness: number;           // 기쁨 점수 (0-100)
-  stress: number;              // 스트레스 점수 (0-100)
-  // ... 기타 필드
+  timestamp: number;
+  latency: number | null;
+  downloadSpeed: number | null;
+  emotions: {
+    happy: number;
+    stress: number;
+    anger: number;
+    calm: number;
+    anxiety: number;
+  };
+  // ...
 }
 ```
-
-### 감정 점수 계산
-
-- **기쁨**: 지연시간(25%) + 속도(20%) + 안정성(30%) + 연결(25%)
-- **스트레스**: 지연시간(35%) + 속도(30%) + 불안정(40%) + 끊김(35%)
 
 ## 🔧 기술 스택
 
@@ -111,47 +122,6 @@ interface NetworkMetrics {
 - **Vite** 5.0.0
 - **Chart.js** 4.4.0
 - **react-chartjs-2** 5.2.0
-
-## 📝 개발 가이드
-
-### 코드 스타일
-
-- 변수명: `camelCase`
-- 컴포넌트명: `PascalCase`
-- 상수: `UPPER_SNAKE_CASE`
-- 들여쓰기: 2 스페이스
-
-### 주요 훅
-
-#### `useNetworkMetrics()`
-
-네트워크 메트릭을 수집하고 관리하는 훅입니다.
-
-```javascript
-const { metrics, history, isMonitoring } = useNetworkMetrics();
-```
-
-#### `useNetwork()`
-
-Context에서 네트워크 상태를 가져오는 훅입니다.
-
-```javascript
-const { metrics, history } = useNetwork();
-```
-
-## 🚢 배포
-
-### Netlify 배포
-
-1. GitHub 레포지토리에 푸시
-2. Netlify에서 레포지토리 연결
-3. 빌드 설정:
-   - Build command: `npm run build`
-   - Publish directory: `dist`
-
-### 환경 변수
-
-현재 환경 변수는 필요하지 않습니다. 모든 데이터는 localStorage에 저장됩니다.
 
 ## 🔒 보안 & 프라이버시
 

@@ -51,18 +51,36 @@ export default function HealthBar() {
     };
   }, [metrics, primaryEmotionInfo, currentEmotions]);
 
+  // 마지막 업데이트 시간
+  const lastUpdateTime = useMemo(() => {
+    if (!metrics) return '';
+    const date = new Date(metrics.timestamp);
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `오늘 ${hours}:${minutes}:${seconds}`;
+  }, [metrics]);
+
   return (
     <div className="health-bar">
       <div className="health-bar-content">
         <div className="health-bar-header">
-          <h2>네트워크 건강도</h2>
-          <span className="health-status" style={{ color: statusColor }}>
-            {status}
-          </span>
+          <div className="health-bar-title-section">
+            <span className="health-bar-icon">🔊</span>
+            <h2>네트워크 건강도</h2>
+          </div>
+          <div className="health-bar-status-section">
+            <span className="health-status" style={{ color: statusColor }}>
+              {status}
+            </span>
+            {lastUpdateTime && (
+              <span className="health-update-time">{lastUpdateTime}</span>
+            )}
+          </div>
         </div>
         
         <div className="health-score-container">
-          <div className="health-score-value">{healthScore}</div>
+          <div className="health-score-value">{healthScore}/10</div>
           <div className="health-score-bar">
             <div
               className="health-score-fill"
@@ -74,40 +92,6 @@ export default function HealthBar() {
           </div>
         </div>
 
-        {metrics && metrics.emotions && (
-          <div className="health-metrics">
-            <div className="health-metric">
-              <span className="metric-label">{EMOTIONS.HAPPY.emoji} {EMOTIONS.HAPPY.name}</span>
-              <span className="metric-value" style={{ color: EMOTIONS.HAPPY.color }}>
-                {currentEmotions.happy}
-              </span>
-            </div>
-            <div className="health-metric">
-              <span className="metric-label">{EMOTIONS.STRESS.emoji} {EMOTIONS.STRESS.name}</span>
-              <span className="metric-value" style={{ color: EMOTIONS.STRESS.color }}>
-                {currentEmotions.stress}
-              </span>
-            </div>
-            <div className="health-metric">
-              <span className="metric-label">{EMOTIONS.ANGER.emoji} {EMOTIONS.ANGER.name}</span>
-              <span className="metric-value" style={{ color: EMOTIONS.ANGER.color }}>
-                {currentEmotions.anger}
-              </span>
-            </div>
-            <div className="health-metric">
-              <span className="metric-label">{EMOTIONS.CALM.emoji} {EMOTIONS.CALM.name}</span>
-              <span className="metric-value" style={{ color: EMOTIONS.CALM.color }}>
-                {currentEmotions.calm}
-              </span>
-            </div>
-            <div className="health-metric">
-              <span className="metric-label">{EMOTIONS.ANXIETY.emoji} {EMOTIONS.ANXIETY.name}</span>
-              <span className="metric-value" style={{ color: EMOTIONS.ANXIETY.color }}>
-                {currentEmotions.anxiety}
-              </span>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

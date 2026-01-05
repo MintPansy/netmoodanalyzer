@@ -31,5 +31,9 @@ dist-ssr
 
 # Build outputs
 build
+dist
 *.tsbuildinfo
+
+# Netlify
+.netlify
 
