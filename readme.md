@@ -1,198 +1,173 @@
-# 🧠 NetMood Analyzer
+# 🌐 NetMood Analyzer
 
-네트워크 트래픽을 감정으로 분석하는 AI 대시보드
-
-## 📋 프로젝트 개요
-
-NetMood Analyzer는 네트워크 트래픽 데이터를 분석하여 감정 상태(평온, 기쁨, 불안, 화남)로 분류하고 시각화하는 도구입니다. CSV 형태의 네트워크 로그 데이터를 업로드하면 실시간으로 감정 분석 결과를 확인할 수 있습니다.
+네트워크 트래픽을 AI로 분석해 **감정(기쁨, 스트레스)**으로 시각화하는 웹 대시보드
 
 ## ✨ 주요 기능
 
-### 🎯 감정 상태 시각화
-- **4가지 감정 카드**: 평온(😌), 만족(😊), 불안(😰), 분노(😡)
-- **직관적인 색상 구분**: 각 감정에 맞는 그라데이션 배경
-- **실시간 값 표시**: 백분율로 감정 강도 표시
-- **호버 애니메이션**: 카드에 마우스를 올리면 부드러운 효과
+- 📊 **실시간 네트워크 모니터링**: 5초마다 네트워크 상태 자동 측정
+- 😊 **감정 기반 시각화**: 복잡한 네트워크 데이터를 기쁨/스트레스 점수로 직관화
+- 📈 **인터랙티브 차트**: Chart.js 기반 실시간 라인 차트
+- 💾 **로컬 데이터 저장**: localStorage 기반 데이터 보관
+- 📱 **반응형 디자인**: 모바일, 태블릿, 데스크톱 지원
 
-### 📈 고급 감정 변화 추이 차트
-- **Chart.js 라이브러리** 활용한 인터랙티브 라인 차트
-- **4가지 감정 라인**: 각자 다른 색상으로 구분
-- **선명한 마커**: 원형 마커와 호버 효과
-- **시간 단위 선택**: 3시간, 1일, 1달, 3달 단위로 동적 변경
-- **실시간 통계**: 데이터 포인트 수와 시간 범위 표시
-- **커스텀 범례**: 감정별 색상 구분
-- **부드러운 애니메이션**: 차트 로딩 시 자연스러운 전환
+## 🚀 시작하기
 
-### 📁 CSV 파일 업로드
-- **드래그 앤 드롭**: 파일을 영역에 끌어다 놓기 지원
-- **클릭 업로드**: 버튼 클릭으로 파일 선택
-- **진행 상태 표시**: 분석 중/완료 상태를 시각적으로 표시
-- **실시간 피드백**: 업로드 상태를 애니메이션과 함께 표시
+### 필수 요구사항
 
-### 🚨 감정별 경고 시스템
-- **3단계 알림 레벨**:
-  - 🔥 **긴급** (분노 > 15%): 빨간색 위험 알림
-  - ⚠️ **주의** (불안 > 25%): 노란색 경고 알림
-  - ✅ **양호** (평온 > 60%): 초록색 정상 알림
-- **슬라이드 인 애니메이션**: 알림이 부드럽게 나타남
+- Node.js 18.x 이상
+- npm 또는 yarn
 
-### 🎨 미니멀 디자인
-- **그라데이션 배경**: 모던한 보라색 그라데이션
-- **글래스모피즘 효과**: 반투명 배경과 블러 효과
-- **반응형 레이아웃**: 모바일/태블릿 대응
-- **부드러운 애니메이션**: 페이지 로드와 전환 효과
+### 설치
 
-## 📊 CSV 데이터 형식
-
-분석에 사용되는 CSV 파일은 다음 형식을 따라야 합니다:
-
-```csv
-Timestamp,SourceIP,DestinationIP,Protocol,Bytes,PacketRate,ProtocolEntropy,Emotion
-2025-10-03 10:00:00,192.168.0.1,8.8.8.8,TCP,23456,120,0.62,평온
-2025-10-03 10:01:00,192.168.0.2,10.0.0.5,UDP,34000,780,0.85,화남
-2025-10-03 10:02:00,192.168.0.3,1.1.1.1,ICMP,4500,40,0.55,기쁨
-```
-
-### 필드 설명
-- **Timestamp**: 트래픽 발생 시간
-- **SourceIP**: 출발지 IP 주소
-- **DestinationIP**: 목적지 IP 주소
-- **Protocol**: 프로토콜 (TCP, UDP, ICMP 등)
-- **Bytes**: 전송된 바이트 수
-- **PacketRate**: 패킷 전송률
-- **ProtocolEntropy**: 프로토콜 엔트로피 (0.0-1.0)
-- **Emotion**: 감정 상태 (평온, 기쁨, 불안, 화남)
-
-## 🚀 사용 방법
-
-### 웹 대시보드 사용
-
-1. **파일 열기**: `netmood-dashboard.html`을 웹 브라우저에서 열기
-2. **데모 실행**: "🎯 샘플 데이터로 데모" 버튼 클릭하여 샘플 데이터 분석 확인
-3. **CSV 업로드**: 
-   - "📂 파일 선택" 버튼 클릭하여 CSV 파일 선택
-   - 또는 CSV 파일을 드래그 앤 드롭 영역에 끌어다 놓기
-4. **결과 확인**: 분석 완료 후 감정 카드, 차트, 알림, 요약 확인
-
-### 파이썬 백엔드 사용
-
-#### 1. 환경 설정
 ```bash
 # 의존성 설치
-pip install -r requirements.txt
+npm install
+
+# 개발 서버 실행
+npm run dev
 ```
 
-#### 2. 데모 실행
+브라우저에서 `http://localhost:3000`으로 접속하세요.
+
+### 빌드
+
 ```bash
-# 샘플 데이터로 데모 실행
-python run_demo.py
+# 프로덕션 빌드
+npm run build
 
-# 또는 직접 실행
-python netmood_analyzer.py --demo
+# 빌드 미리보기
+npm run preview
 ```
-
-#### 3. CSV 파일 분석
-```bash
-# CSV 파일 분석
-python netmood_analyzer.py --csv your_file.csv
-
-# 결과를 JSON 파일로 저장
-python netmood_analyzer.py --csv your_file.csv --output result.json
-```
-
-## 🔧 기술 스택
-
-### 프론트엔드
-- **HTML5**: 시맨틱 마크업 구조
-- **CSS3**: Flexbox/Grid 레이아웃, 애니메이션, 반응형 디자인
-- **JavaScript (ES6+)**: DOM 조작, CSV 파싱, Chart.js 연동
-- **Chart.js**: 인터랙티브 차트 라이브러리
-
-### 백엔드
-- **Python 3.7+**: 메인 분석 엔진
-- **Pandas**: 데이터 처리 및 분석
-- **NumPy**: 수치 계산
 
 ## 📁 프로젝트 구조
 
 ```
 netmood-analyzer/
-├── netmood-dashboard.html    # 웹 대시보드 (메인 UI)
-├── netmood_analyzer.py       # 파이썬 분석 엔진
-├── run_demo.py              # 데모 실행 스크립트
-├── requirements.txt         # 파이썬 의존성
-└── README.md               # 프로젝트 문서
+├── src/
+│   ├── components/          # React 컴포넌트
+│   │   ├── Dashboard.jsx   # 메인 대시보드
+│   │   ├── HealthBar.jsx   # 상단 건강도 바
+│   │   ├── Chart.jsx       # 차트 컴포넌트
+│   │   └── MetricsPanel.jsx # 메트릭 패널
+│   ├── context/            # Context API
+│   │   └── NetworkContext.jsx
+│   ├── hooks/              # Custom Hooks
+│   │   └── useNetworkMetrics.js
+│   ├── utils/              # 유틸리티 함수
+│   │   ├── constants.js
+│   │   ├── networkCalculator.js
+│   │   └── storageManager.js
+│   ├── types/              # TypeScript 타입
+│   │   └── index.ts
+│   ├── App.jsx             # 최상위 컴포넌트
+│   ├── main.jsx            # 진입점
+│   └── index.css           # 글로벌 스타일
+├── public/                 # 정적 자산
+├── package.json
+├── vite.config.js
+└── tsconfig.json
 ```
 
-## 🎯 분석 결과 예시
+## 🎨 디자인 시스템
 
-### 감정별 분석 결과
-```
-📈 감정별 분석 결과:
-==================================================
+### 색상 팔레트
 
-평온 (40.0%):
-  • 레코드 수: 4건
-  • 총 바이트: 66,456 bytes
-  • 평균 엔트로피: 0.543
-  • 프로토콜 분포: {'TCP': 3, 'ICMP': 1}
+- **기쁨**: `#4CAF50` (초록색)
+- **스트레스**: `#F44336` (빨간색)
+- **배경**: `#f0f8f0` (연한 초록)
+- **카드**: `#ffffff` (흰색)
 
-기쁨 (20.0%):
-  • 레코드 수: 2건
-  • 총 바이트: 32,500 bytes
-  • 평균 엔트로피: 0.565
-  • 프로토콜 분포: {'TCP': 1, 'ICMP': 1}
+### 컴포넌트 스타일
 
-불안 (20.0%):
-  • 레코드 수: 2건
-  • 총 바이트: 49,000 bytes
-  • 평균 엔트로피: 0.765
-  • 프로토콜 분포: {'TCP': 2}
+- 카드: `border-radius: 12px`, `padding: 16px`
+- 버튼: `border-radius: 8px`
+- 그림자: `0 2px 8px rgba(0, 0, 0, 0.08)`
 
-화남 (20.0%):
-  • 레코드 수: 2건
-  • 총 바이트: 84,000 bytes
-  • 평균 엔트로피: 0.885
-  • 프로토콜 분포: {'UDP': 2}
-```
+## 📊 데이터 구조
 
-### 경고 메시지
-```
-🚨 경고 및 알림:
-==================================================
+### NetworkMetrics
 
-🔥 긴급! 네트워크 분노 레벨이 20.0%로 높습니다. 보안 점검이 필요합니다.
+```typescript
+interface NetworkMetrics {
+  timestamp: number;           // 밀리초 단위
+  latency: number | null;      // 지연시간 (ms)
+  downloadSpeed: number | null; // 다운로드 속도 (Mbps)
+  packetLoss: number;          // 패킷 손실율 (%)
+  happiness: number;           // 기쁨 점수 (0-100)
+  stress: number;              // 스트레스 점수 (0-100)
+  // ... 기타 필드
+}
 ```
 
-## 💡 개발자 친화적 특징
+### 감정 점수 계산
 
-1. **모듈화된 코드**: 각 기능별로 분리된 함수 구조
-2. **시맨틱 HTML**: 접근성과 SEO 고려한 마크업
-3. **확장 가능성**: 새로운 감정 타입 쉽게 추가 가능
-4. **브라우저 호환성**: 모든 모던 브라우저 지원
-5. **성능 최적화**: 효율적인 CSS 애니메이션과 JavaScript 실행
+- **기쁨**: 지연시간(25%) + 속도(20%) + 안정성(30%) + 연결(25%)
+- **스트레스**: 지연시간(35%) + 속도(30%) + 불안정(40%) + 끊김(35%)
 
-## 🔮 향후 개선 계획
+## 🔧 기술 스택
 
-- [ ] 실시간 데이터 스트리밍 지원
-- [ ] 더 많은 감정 타입 추가
-- [ ] 머신러닝 기반 감정 분석 개선
-- [ ] REST API 서버 구현
-- [ ] 데이터베이스 연동
-- [ ] 사용자 인증 및 권한 관리
+- **React** 18.3.1
+- **TypeScript** 5.3.3
+- **Vite** 5.0.0
+- **Chart.js** 4.4.0
+- **react-chartjs-2** 5.2.0
 
-## 📝 라이선스
+## 📝 개발 가이드
 
-MIT License
+### 코드 스타일
 
-## 🤝 기여하기
+- 변수명: `camelCase`
+- 컴포넌트명: `PascalCase`
+- 상수: `UPPER_SNAKE_CASE`
+- 들여쓰기: 2 스페이스
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+### 주요 훅
+
+#### `useNetworkMetrics()`
+
+네트워크 메트릭을 수집하고 관리하는 훅입니다.
+
+```javascript
+const { metrics, history, isMonitoring } = useNetworkMetrics();
+```
+
+#### `useNetwork()`
+
+Context에서 네트워크 상태를 가져오는 훅입니다.
+
+```javascript
+const { metrics, history } = useNetwork();
+```
+
+## 🚢 배포
+
+### Netlify 배포
+
+1. GitHub 레포지토리에 푸시
+2. Netlify에서 레포지토리 연결
+3. 빌드 설정:
+   - Build command: `npm run build`
+   - Publish directory: `dist`
+
+### 환경 변수
+
+현재 환경 변수는 필요하지 않습니다. 모든 데이터는 localStorage에 저장됩니다.
+
+## 🔒 보안 & 프라이버시
+
+- ✅ 모든 데이터는 로컬에만 저장 (localStorage)
+- ✅ 서버 전송 없음
+- ✅ 사용자 계정 불필요
+- ✅ HTTPS 배포 (Netlify 기본 제공)
+
+## 📄 라이선스
+
+이 프로젝트는 개인 프로젝트입니다.
+
+## 🤝 기여
+
+이슈 및 풀 리퀘스트를 환영합니다!
 
 ---
 
-**NetMood Analyzer** - 네트워크의 감정을 읽어보세요! 🧠✨
+**마지막 업데이트**: 2026년 1월 5일

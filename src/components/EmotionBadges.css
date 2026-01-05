@@ -1,0 +1,114 @@
+/**
+ * EmotionBadges 컴포넌트 스타일
+ */
+
+.emotion-badges-container {
+  background: var(--color-bg-card);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 24px;
+}
+
+.emotion-badges-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 16px;
+}
+
+.emotion-badges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.emotion-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 14px;
+  white-space: nowrap;
+  background-color: rgba(var(--emotion-color-rgb, 76, 175, 80), 0.15);
+  color: var(--emotion-color, #4CAF50);
+  transition: all 0.2s;
+  border: 2px solid transparent;
+}
+
+.emotion-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.emotion-badge--primary {
+  border-color: var(--emotion-color, #4CAF50);
+  background-color: rgba(var(--emotion-color-rgb, 76, 175, 80), 0.25);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(var(--emotion-color-rgb, 76, 175, 80), 0.3);
+}
+
+.emotion-badge-emoji {
+  font-size: 20px;
+}
+
+.emotion-badge-name {
+  flex: 1;
+}
+
+.emotion-badge-score {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* 각 감정별 색상 */
+.emotion-badge--happy {
+  background-color: rgba(76, 175, 80, 0.15);
+  color: #4CAF50;
+  --emotion-color: #4CAF50;
+  --emotion-color-rgb: 76, 175, 80;
+}
+
+.emotion-badge--stress {
+  background-color: rgba(255, 107, 107, 0.15);
+  color: #FF6B6B;
+  --emotion-color: #FF6B6B;
+  --emotion-color-rgb: 255, 107, 107;
+}
+
+.emotion-badge--anger {
+  background-color: rgba(244, 67, 54, 0.15);
+  color: #F44336;
+  --emotion-color: #F44336;
+  --emotion-color-rgb: 244, 67, 54;
+}
+
+.emotion-badge--calm {
+  background-color: rgba(33, 150, 243, 0.15);
+  color: #2196F3;
+  --emotion-color: #2196F3;
+  --emotion-color-rgb: 33, 150, 243;
+}
+
+.emotion-badge--anxiety {
+  background-color: rgba(255, 193, 7, 0.15);
+  color: #FFC107;
+  --emotion-color: #FFC107;
+  --emotion-color-rgb: 255, 193, 7;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .emotion-badges-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .emotion-badges-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

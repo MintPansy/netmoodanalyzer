@@ -1,0 +1,39 @@
+/**
+ * EmotionChart 컴포넌트 스타일
+ */
+
+.emotion-chart-container {
+  background: var(--color-bg-card);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 24px;
+}
+
+.emotion-chart-wrapper {
+  height: 350px;
+  position: relative;
+}
+
+.emotion-chart-empty {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .emotion-chart-wrapper {
+    height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .emotion-chart-wrapper {
+    height: 250px;
+  }
+}
+

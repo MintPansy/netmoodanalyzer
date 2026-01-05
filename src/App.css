@@ -1,0 +1,9 @@
+/**
+ * NetMood Analyzer - App 컴포넌트 스타일
+ */
+
+.app {
+  min-height: 100vh;
+  background: var(--color-bg-primary);
+}
+

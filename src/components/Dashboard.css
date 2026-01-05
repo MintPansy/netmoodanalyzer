@@ -1,0 +1,130 @@
+/**
+ * Dashboard 컴포넌트 스타일
+ */
+
+.dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding: 20px 0;
+}
+
+.dashboard-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #1f6f68 0%, #27d3b2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dashboard-subtitle {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.dashboard-main {
+  width: 100%;
+}
+
+.dashboard-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 24px;
+  align-items: start;
+  margin-bottom: 24px;
+}
+
+.dashboard-chart {
+  width: 100%;
+}
+
+.dashboard-metrics {
+  width: 100%;
+}
+
+.dashboard-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.dashboard-settings {
+  width: 100%;
+  min-height: 200px;
+}
+
+.dashboard-badges {
+  width: 100%;
+}
+
+.dashboard-chart-full {
+  width: 100%;
+  margin-top: 24px;
+}
+
+.dashboard-placeholder {
+  background: var(--color-bg-card);
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  margin-top: 24px;
+}
+
+.dashboard-placeholder h2 {
+  font-size: 24px;
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
+}
+
+.dashboard-placeholder p {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+  .dashboard-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 16px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 24px;
+  }
+
+  .dashboard-content {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    padding: 12px;
+  }
+
+  .dashboard-header {
+    margin-bottom: 24px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 20px;
+  }
+}
+
