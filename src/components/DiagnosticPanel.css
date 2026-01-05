@@ -1,0 +1,197 @@
+/**
+ * DiagnosticPanel 컴포넌트 스타일
+ */
+
+.diagnostic-panel {
+  background: var(--color-bg-card);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 24px;
+}
+
+.diagnostic-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.diagnostic-panel-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.diagnostic-button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.diagnostic-button--primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.diagnostic-button--primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.diagnostic-button--primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.diagnostic-empty {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.diagnostic-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.diagnostic-empty-message {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.diagnostic-issues {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.diagnostic-card {
+  background: var(--color-bg-secondary);
+  border-radius: 8px;
+  padding: 16px;
+  border-left: 4px solid;
+  transition: all 0.2s;
+}
+
+.diagnostic-card:hover {
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.diagnostic-card--critical {
+  border-left-color: #F44336;
+  background: #fef5f5;
+}
+
+.diagnostic-card--warning {
+  border-left-color: #FF9800;
+  background: #fff8e1;
+}
+
+.diagnostic-card--info {
+  border-left-color: #2196F3;
+  background: #e3f2fd;
+}
+
+.diagnostic-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.diagnostic-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.diagnostic-title-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.diagnostic-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.diagnostic-severity {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.diagnostic-content {
+  margin-bottom: 12px;
+}
+
+.diagnostic-description {
+  font-size: 14px;
+  color: var(--color-text-primary);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.diagnostic-recommendation {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 4px;
+}
+
+.diagnostic-recommendation strong {
+  color: var(--color-text-primary);
+}
+
+.diagnostic-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.diagnostic-button--resolve {
+  background: #4CAF50;
+  color: white;
+}
+
+.diagnostic-button--resolve:hover {
+  background: #45a049;
+}
+
+.diagnostic-button--remove {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+
+.diagnostic-button--remove:hover {
+  background: var(--color-border-light);
+  color: var(--color-text-primary);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .diagnostic-panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .diagnostic-button--primary {
+    width: 100%;
+  }
+}
+

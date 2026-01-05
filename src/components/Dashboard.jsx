@@ -8,6 +8,12 @@ import TabMenu from './TabMenu.jsx';
 import EmotionChart from './EmotionChart.jsx';
 import EmotionBadges from './EmotionBadges.jsx';
 import MetricsPanel from './MetricsPanel.jsx';
+import DiagnosticPanel from './DiagnosticPanel.jsx';
+import SettingsPanel from './SettingsPanel.jsx';
+import HelpPanel from './HelpPanel.jsx';
+import RealTimeMonitoringPage from './RealTimeMonitoringPage.jsx';
+import RiskDetectionPage from './RiskDetectionPage.jsx';
+import HistoryPage from './HistoryPage.jsx';
 import './Dashboard.css';
 
 /**
@@ -33,22 +39,17 @@ export default function Dashboard() {
                 <MetricsPanel />
               </div>
 
-              {/* 중앙: 5가지 감정 차트 */}
-              <div className="dashboard-chart">
-                <EmotionChart />
+              {/* 우측: 감정 배지 */}
+              <div className="dashboard-badges">
+                <EmotionBadges />
               </div>
             </div>
 
             {/* 하단 영역 */}
             <div className="dashboard-bottom">
-              {/* 하단 좌측: Settings (추후 구현) */}
+              {/* 하단 좌측: Settings */}
               <div className="dashboard-settings">
-                {/* SettingsPanel 컴포넌트는 추후 추가 */}
-              </div>
-
-              {/* 하단 우측: 감정 배지 */}
-              <div className="dashboard-badges">
-                <EmotionBadges />
+                <SettingsPanel />
               </div>
             </div>
           </>
@@ -65,30 +66,20 @@ export default function Dashboard() {
       case 'monitoring':
         return (
           <>
-            <HealthBar />
-            <div className="dashboard-content">
-              <div className="dashboard-metrics">
-                <MetricsPanel />
-              </div>
-              <div className="dashboard-chart">
-                <EmotionChart />
-              </div>
-            </div>
+            <RealTimeMonitoringPage />
           </>
         );
       case 'risk':
         return (
-          <div className="dashboard-placeholder">
-            <h2>위험 감지</h2>
-            <p>위험 상황 관리 기능은 추후 구현 예정입니다.</p>
-          </div>
+          <>
+            <RiskDetectionPage />
+          </>
         );
       case 'history':
         return (
-          <div className="dashboard-placeholder">
-            <h2>이력 관리</h2>
-            <p>과거 데이터 분석 기능은 추후 구현 예정입니다.</p>
-          </div>
+          <>
+            <HistoryPage />
+          </>
         );
       default:
         return null;

@@ -1,0 +1,68 @@
+/**
+ * DataPointsCard 컴포넌트 스타일
+ */
+
+.data-points-card {
+  background: var(--color-bg-card);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-card);
+}
+
+.data-points-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.data-point-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: var(--color-bg-secondary);
+  border-radius: 8px;
+  transition: transform 0.2s;
+}
+
+.data-point-item:hover {
+  transform: translateY(-2px);
+}
+
+.data-point-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.data-point-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.data-point-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.data-point-label {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .data-points-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .data-points-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

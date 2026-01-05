@@ -1,0 +1,95 @@
+/**
+ * RealTimeFeedList 컴포넌트 스타일
+ */
+
+.realtime-feed {
+  background: var(--color-bg-card);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.realtime-feed-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 16px;
+}
+
+.realtime-feed-list {
+  max-height: 400px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.realtime-feed-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--color-text-secondary);
+}
+
+.realtime-feed-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--color-bg-secondary);
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.realtime-feed-item:hover {
+  background: var(--color-border-light);
+}
+
+.feed-item-emoji {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.feed-item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.feed-item-emotion {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.feed-item-strength {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.feed-item-time {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  font-family: monospace;
+  flex-shrink: 0;
+}
+
+/* 스크롤바 스타일 */
+.realtime-feed-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.realtime-feed-list::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+  border-radius: 3px;
+}
+
+.realtime-feed-list::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+.realtime-feed-list::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
+

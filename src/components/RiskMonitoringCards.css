@@ -1,0 +1,62 @@
+/**
+ * RiskMonitoringCards 컴포넌트 스타일
+ */
+
+.risk-monitoring-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.risk-card {
+  background: var(--color-bg-card);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: transform 0.2s;
+}
+
+.risk-card:hover {
+  transform: translateY(-2px);
+}
+
+.risk-card-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.risk-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.risk-card-label {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.risk-card-count {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .risk-monitoring-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .risk-monitoring-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+

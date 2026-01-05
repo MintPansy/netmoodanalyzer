@@ -1,0 +1,106 @@
+/**
+ * HistoryTable 컴포넌트 스타일
+ */
+
+.history-table-container {
+  background: var(--color-bg-card);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.history-table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 16px;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.history-table thead {
+  background: var(--color-bg-secondary);
+}
+
+.history-table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  border-bottom: 2px solid var(--color-border);
+}
+
+.history-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--color-border-light);
+  color: var(--color-text-primary);
+}
+
+.history-table tbody tr:hover {
+  background: var(--color-bg-secondary);
+}
+
+.history-table-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--color-text-secondary);
+}
+
+.emotion-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.emotion-emoji {
+  font-size: 18px;
+}
+
+.history-table-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.pagination-button {
+  padding: 8px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background: var(--color-border-light);
+  transform: translateY(-2px);
+}
+
+.pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .history-table {
+    font-size: 12px;
+  }
+
+  .history-table th,
+  .history-table td {
+    padding: 8px;
+  }
+}
+

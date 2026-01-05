@@ -1,0 +1,51 @@
+/**
+ * CustomerSupport 컴포넌트 스타일
+ */
+
+.customer-support {
+  background: var(--color-bg-card);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.customer-support-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
+}
+
+.customer-support-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.customer-support-content p {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.customer-support-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.support-button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.support-button:hover {
+  background: var(--color-border-light);
+  transform: translateY(-2px);
+}
+
