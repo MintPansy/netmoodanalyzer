@@ -17,10 +17,11 @@ export default function HealthBar() {
   const { metrics } = useNetwork();
   const { primaryEmotionInfo, currentEmotions } = useEmotion();
 
-  const { healthScore, status, statusColor } = useMemo(() => {
+  const { healthScore, healthOutOf10, status, statusColor } = useMemo(() => {
     if (!metrics) {
       return {
         healthScore: 0,
+        healthOutOf10: 0,
         status: STATUS_LABELS.WARNING,
         statusColor: COLORS.TEXT_SECONDARY,
       };
@@ -46,6 +47,7 @@ export default function HealthBar() {
 
     return {
       healthScore: health,
+      healthOutOf10: Math.round((health / 10) * 10) / 10,
       status,
       statusColor,
     };
@@ -80,7 +82,7 @@ export default function HealthBar() {
         </div>
         
         <div className="health-score-container">
-          <div className="health-score-value">{healthScore}/10</div>
+          <div className="health-score-value">{healthOutOf10}/10</div>
           <div className="health-score-bar">
             <div
               className="health-score-fill"
