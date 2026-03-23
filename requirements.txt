@@ -1,5 +1,8 @@
 # NetMood Analyzer - 실시간 시스템 의존성
-
+#
+# Windows: netifaces 등이 Visual C++ Build Tools 없이 빌드 실패할 수 있음.
+# API 서버·DB만 필요하면: py -3 -m pip install -r requirements-api.txt
+#
 # 핵심 데이터 처리
 pandas>=1.5.0
 numpy>=1.21.0
@@ -8,6 +11,9 @@ numpy>=1.21.0
 Flask>=2.0.0
 Flask-CORS>=3.0.0
 requests>=2.31.0
+
+# PostgreSQL (세션·메트릭 저장, DATABASE_URL 설정 시)
+psycopg[binary]>=3.1.0
 
 # 실시간 통신
 websockets>=10.0

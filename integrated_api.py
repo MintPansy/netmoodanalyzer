@@ -17,6 +17,8 @@ import logging
 import os
 import requests
 
+import netmood_db
+
 # 기존 모듈 import
 try:
     from realtime_capture import NetMoodRealtimeSystem, PrivacySettings
@@ -248,6 +250,119 @@ def initialize_systems():
 def index():
     """메인 대시보드"""
     return send_from_directory('.', 'integrated-dashboard.html')
+
+
+def _db_disabled_response(message=None):
+    msg = message or 'PostgreSQL이 비활성화되어 있습니다. DATABASE_URL과 psycopg 설치를 확인하세요.'
+    return jsonify({'success': False, 'error': msg}), 503
+
+
+@app.route('/api/db/status', methods=['GET'])
+def db_status():
+    """PostgreSQL 연결 설정 여부 (민감 정보 없음)."""
+    url_set = bool(netmood_db.database_url())
+    ready = netmood_db.is_enabled()
+    return jsonify({
+        'success': True,
+        'data': {
+            'database_url_set': url_set,
+            'ready': ready,
+        },
+    })
+
+
+@app.route('/api/db/sessions', methods=['POST'])
+def db_create_session():
+    """모니터링 세션 시작 — 응답 id로 메트릭을 POST 합니다."""
+    if not netmood_db.is_enabled():
+        return _db_disabled_response()
+    try:
+        body = request.get_json(silent=True) or {}
+        meta = body.get('meta')
+        if meta is not None and not isinstance(meta, dict):
+            return jsonify({'success': False, 'error': 'meta는 객체여야 합니다.'}), 400
+        data = netmood_db.create_session(meta)
+        return jsonify({'success': True, 'data': data})
+    except Exception as e:
+        logger.error('세션 생성 실패: %s', e)
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/db/sessions/<session_id>/end', methods=['PATCH', 'POST'])
+def db_end_session(session_id):
+    if not netmood_db.is_enabled():
+        return _db_disabled_response()
+    try:
+        row = netmood_db.end_session(session_id)
+        if not row:
+            return jsonify({'success': False, 'error': '세션을 찾을 수 없거나 이미 종료되었습니다.'}), 404
+        return jsonify({'success': True, 'data': row})
+    except Exception as e:
+        logger.error('세션 종료 실패: %s', e)
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/db/sessions/<session_id>/metrics', methods=['POST'])
+def db_post_metric(session_id):
+    """대시보드와 동일 형식의 메트릭 JSON 저장 (useNetworkMetrics 객체)."""
+    if not netmood_db.is_enabled():
+        return _db_disabled_response()
+    try:
+        body = request.get_json(force=True)
+        if not isinstance(body, dict):
+            return jsonify({'success': False, 'error': 'JSON 객체가 필요합니다.'}), 400
+        data = netmood_db.insert_metric(session_id, body)
+        return jsonify({'success': True, 'data': data})
+    except Exception as e:
+        logger.exception('메트릭 저장 실패')
+        err = str(e)
+        if 'foreign key' in err.lower() or '23503' in err:
+            return jsonify({'success': False, 'error': '유효하지 않은 session_id입니다.'}), 404
+        return jsonify({'success': False, 'error': err}), 500
+
+
+@app.route('/api/db/analytics/hourly-pattern', methods=['GET'])
+def db_analytics_hourly_pattern():
+    if not netmood_db.is_enabled():
+        return _db_disabled_response()
+    try:
+        days = int(request.args.get('days', 7))
+        tz_name = request.args.get('timezone', 'Asia/Seoul')
+        session_id = request.args.get('session_id') or None
+        rows = netmood_db.hourly_pattern(days, tz_name, session_id)
+        return jsonify({'success': True, 'data': {'timezone': tz_name, 'days': days, 'hours': rows}})
+    except Exception as e:
+        logger.error('시간대 패턴 조회 실패: %s', e)
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/db/analytics/anomalies', methods=['GET'])
+def db_analytics_anomalies():
+    if not netmood_db.is_enabled():
+        return _db_disabled_response()
+    try:
+        limit = int(request.args.get('limit', 50))
+        session_id = request.args.get('session_id') or None
+        rows = netmood_db.list_anomalies(limit, session_id)
+        return jsonify({'success': True, 'data': rows})
+    except Exception as e:
+        logger.error('이상 탐지 목록 조회 실패: %s', e)
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/db/analytics/report-7d', methods=['GET'])
+def db_analytics_report_7d():
+    if not netmood_db.is_enabled():
+        return _db_disabled_response()
+    try:
+        tz_name = request.args.get('timezone', 'Asia/Seoul')
+        session_id = request.args.get('session_id') or None
+        report = netmood_db.report_7d_compare(tz_name, session_id)
+        return jsonify({'success': True, 'data': report})
+    except Exception as e:
+        logger.error('7일 리포트 실패: %s', e)
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 
 @app.route('/api/health', methods=['GET'])
 def get_health_data():
@@ -743,6 +858,10 @@ def update_mock_data():
 if __name__ == '__main__':
     # 시스템 초기화
     initialize_systems()
+
+    db_ready, db_msg = netmood_db.init_db_if_configured()
+    if netmood_db.database_url() and not db_ready and db_msg:
+        logger.warning('PostgreSQL 초기화: %s', db_msg)
     
     # 모의 데이터 업데이트 스레드 시작
     if mock_data:

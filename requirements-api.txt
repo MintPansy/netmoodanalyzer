@@ -1,0 +1,6 @@
+# integrated_api.py + PostgreSQL (모의 데이터 모드)
+# Windows에서 전체 requirements.txt 가 netifaces(C++ 빌드 도구) 때문에 실패할 때 사용
+Flask>=2.0.0
+Flask-CORS>=3.0.0
+requests>=2.31.0
+psycopg[binary]>=3.1.0
